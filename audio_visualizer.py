@@ -71,16 +71,14 @@ ax.set_ylim([0, 90])
 
 
 def animate(t):
-    global cur_time
     ax.cla() # clear the previous image
     time_in_s = t * (interval / 1000)
-    cur_time = time_in_s
     y_pts = [ 80 + get_decibel(time_in_s, f) for f in x_frequencies]
     ax.bar(x_pts, y_pts, width=width, color=(250/256, 1 - np.max(y_pts)*(3/256), 1 - np.max(y_pts)*(3/256))) # plot the line
     ax.set_xticks([x_pts[i] for i in range(0, len(x_pts), 10)], [x_frequencies[i] for i in range(0, len(x_frequencies), 10)])
     # plt.gca().invert_yaxis()
     ax.set_ylim([0, 90]) # fix the y axis
-    ax.set_title("Time: " + str(np.round(time_in_s, 4)) + " seconds")
+    ax.set_title(file_path.split('/')[-1].split('.')[0] + " - " + str(np.round(time_in_s, 4)) + " s")
 
 # interval in milliseconds
 interval = 100
@@ -90,10 +88,9 @@ print(frames)
 pygame.mixer.init()
 pygame.mixer.music.load(file_path)
 
-cur_time = 0
+pygame.mixer.music.play(0)
 anim = animation.FuncAnimation(fig, animate, frames = frames, interval = interval, blit = False, repeat=False)
 
-pygame.mixer.music.play(0, start=cur_time)
 plt.show()
 
 os.remove(file_path)
